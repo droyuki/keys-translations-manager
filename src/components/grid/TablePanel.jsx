@@ -9,9 +9,9 @@ import localeUtil from 'keys-translations-manager-core/lib/localeUtil'
 import ActionCellRenderer from './ActionCellRenderer'
 import Mask from '../layout/Mask'
 import { getLocales, getProjectName } from '../../configUtil'
+import ProjectFilter from './ProjectFilter'
 
 const locales = getLocales()
-
 export default class TablePanel extends React.PureComponent {
 	static propTypes = {
 		reloaddata: PropTypes.bool,
@@ -27,6 +27,7 @@ export default class TablePanel extends React.PureComponent {
 
 		this.state = {
 			quickFilterText: null,
+			projectFilter: [],
 			windowHeight: 0
 		};
 
@@ -34,6 +35,7 @@ export default class TablePanel extends React.PureComponent {
 		this.handleResize = this.handleResize.bind(this);
 		this.debounceResize = debounce(this.handleResize, 150);
 		this.onQuickFilterText = this.onQuickFilterText.bind(this);
+		this.onSelectProejct = this.onSelectProejct.bind(this);
 		this.debounceFilter = debounce(this.handleFilter, 150);
 	}
 
@@ -78,6 +80,11 @@ export default class TablePanel extends React.PureComponent {
 		this.debounceFilter(event.target.value);
 	}
 
+	onSelectProejct(selectedList) {
+		const projectFilter = selectedList ? selectedList.map(el => el.value) : [];
+		this.setState({ projectFilter })
+	}
+
 	downloadCsv() {
 		let url = '/api/download/csv'
 
@@ -118,14 +125,19 @@ export default class TablePanel extends React.PureComponent {
 		const minHeight = 200,
 			top = 370,
 			translations = this.props.translations || [],
-			data = this.state.quickFilterText
-					? translations.filter(e => new RegExp(this.state.quickFilterText, 'i').test(JSON.stringify(e)))
-					: translations,
 			windowHeight = this.state.windowHeight ||
 					(typeof window === "undefined" ? minHeight + top : window.innerHeight);
+		
+		const filterByProject = this.state.projectFilter.length
+							? translations.filter(e => e.project.some(p => this.state.projectFilter.includes(p)))
+							: translations;
 
+		const data = this.state.quickFilterText
+					? filterByProject.filter(e => new RegExp(this.state.quickFilterText, 'i').test(JSON.stringify(e)))
+					: filterByProject;
 		return (
 			<Fragment>
+				<ProjectFilter onChange={this.onSelectProejct} />
 				<InputGroup>
 					<InputGroup.Addon className="app-search-icon">
 						<i className="fas fa-search"/>
@@ -139,6 +151,8 @@ export default class TablePanel extends React.PureComponent {
 						</Button>
 					</InputGroup.Button>
 				</InputGroup>
+
+
 				<ReactTable
 					data={data}
 					columns={this.getColumnDefs()}

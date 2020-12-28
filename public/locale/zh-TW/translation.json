@@ -47,7 +47,8 @@
     "grid": {
       "edit": "雙擊儲存格可進行編輯；鍵入 Enter 以送出更新",
       "empty": "無資料",
-      "search": "關鍵字搜尋"
+      "search": "關鍵字搜尋",
+      "projectFilter": "過濾專案"
     },
     "history": {
       "add": "新增",

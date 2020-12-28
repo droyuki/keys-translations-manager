@@ -47,7 +47,8 @@
     "grid": {
       "edit": "Double-click the cell to edit. Press Enter to commit.",
       "empty": "No data",
-      "search": "Search"
+      "search": "Search",
+      "projectFilter": "Project Filter"
     },
     "history": {
       "add": "Added",

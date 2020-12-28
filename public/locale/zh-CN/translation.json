@@ -47,7 +47,8 @@
     "grid": {
       "edit": "双击单元格可进行编辑；键入 Enter 以送出更新",
       "empty": "无数据",
-      "search": "关键词搜寻"
+      "search": "关键词搜寻",
+      "projectFilter": "过滤专案"
     },
     "history": {
       "add": "新增",
